@@ -22,26 +22,26 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('displaycontroller', 'class.tx_displaycontroller.php'));
+require_once(t3lib_extMgm::extPath('displaycontroller_advanced', 'class.tx_displaycontrolleradvanced.php'));
 
 
 /**
- * Plugin 'Display Controller (not cached)' for the 'displaycontroller' extension.
+ * Plugin 'Display Controller (not cached)' for the 'displaycontroller_advanced' extension.
  *
  * @author		Francois Suter (Cobweb) <typo3@cobweb.ch>
  * @package		TYPO3
- * @subpackage	tx_displaycontroller
+ * @subpackage	tx_displaycontrolleradvanced
  *
  * $Id$
  */
-class tx_displaycontroller_pi2 extends tx_displaycontroller {
-	public $scriptRelPath	= 'pi2/class.tx_displaycontroller_pi2.php';	// Path to this script relative to the extension dir.
+class tx_displaycontrolleradvanced_pi2 extends tx_displaycontrolleradvanced {
+	public $scriptRelPath	= 'pi2/class.tx_displaycontrolleradvanced_pi2.php';	// Path to this script relative to the extension dir.
 }
 
 
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller/pi2/class.tx_displaycontroller_pi2.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller/pi2/class.tx_displaycontroller_pi2.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller_advanced/pi2/class.tx_displaycontrolleradvanced_pi2.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller_advanced/pi2/class.tx_displaycontrolleradvanced_pi2.php']);
 }
 
 ?>

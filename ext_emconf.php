@@ -1,7 +1,7 @@
 <?php
 
 ########################################################################
-# Extension Manager/Repository config file for ext: "displaycontroller"
+# Extension Manager/Repository config file for ext: "displaycontrolleradvanced"
 #
 # Auto generated 10-06-2008 13:44
 #
