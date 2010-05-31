@@ -60,6 +60,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase {
 		else {
 			$this->conf = $conf;
 		}
+
 			// Override standard piVars definition
 		$this->piVars = t3lib_div::GParrayMerged($this->prefixId);
 			// Finally load some additional data into the parser
@@ -158,7 +159,12 @@ class tx_displaycontrolleradvanced extends tslib_pibase {
 				// Handle the primary provider
 				// Define the filter (if any)
 			try {
-				$filter = $this->definePrimaryFilter();
+
+					// Get the secondary data filter, if any
+				$filter = $this->getEmptyFilter();
+				if (!empty($this->data['tx_displaycontroller_datafilter'])) {
+					$filter = $this->defineAdvancedFilter('primary');
+				}
 			}
 			catch (Exception $e) {
 					// Issue warning (error?) if a problem occurred with the filter
@@ -256,49 +262,6 @@ class tx_displaycontrolleradvanced extends tslib_pibase {
 	}
 
 	/**
-	 * This method defines the Data Filter to use depending on the values stored in the database record
-	 * It returns the Data Filter structure
-	 *
-	 * @return	array	Data Filter structure
-	 */
-	protected function definePrimaryFilter() {
-		$filter = $this->getEmptyFilter();
-		if (!empty($this->data['tx_displaycontroller_filtertype'])) {
-			switch ($this->data['tx_displaycontroller_filtertype']) {
-
-					// Simple filter for single view
-					// We expect the "table" and "showUid" parameters and assemble a filter based on those values
-				case 'single':
-					$filter = array();
-					$filter['filters'] = array(
-											0 => array(
-												'table' => $this->piVars['table'],
-												'field' => 'uid',
-												'conditions' => array(
-													0 => array(
-														'operator' => '=',
-														'value' => $this->piVars['showUid'],
-													)
-												)
-											)
-										);
-					break;
-
-					// Simple filter for list view
-				case 'list':
-					$filter = $this->defineListFilter();
-					break;
-
-					// Handle advanced data filters
-				case 'filter':
-					$filter = $this->defineAdvancedFilter();
-					break;
-			}
-		}
-		return $filter;
-	}
-
-	/**
 	 * This method is used to return a clean, empty filter
 	 * 
 	 * @return	array	Empty filter structure
@@ -339,63 +302,6 @@ class tx_displaycontrolleradvanced extends tslib_pibase {
 	}
 
 	/**
-	 * This method defines the filter for the default, simple list view
-	 * It expects two parameters, "limit" and "page" ,for browsing the list's pages
-	 * It will also considere a default sorting scheme represented by the "sort" and "order" parameters
-	 *
-	 * @return	array	A filter structure
-	 */
-	protected function defineListFilter() {
-			// Initialise the filter
-		$filter = $this->initFilter();
-		if (!isset($filter['limit'])) $filter['limit'] = array();
-
-			// Handle the page browsing variables
-		if (isset($this->piVars['max'])) {
-			$filter['limit']['max'] = $this->piVars['max'];
-		}
-		$filter['limit']['offset'] = isset($this->piVars['page']) ? $this->piVars['page'] : 0;
-
-			// If the limit is still empty after that, consider the default value from TypoScript
-		if (empty($filter['limit']['max'])) {
-			$filter['limit']['max'] = $this->conf['listView.']['limit'];
-		}
-
-			// Handle sorting variables
-		if (isset($this->piVars['sort'])) {
-			$sortParts = t3lib_div::trimExplode('.', $this->piVars['sort'], 1);
-			$table = '';
-			$field = $sortParts[0];
-			if (count($sortParts) == 2) {
-				$table = $sortParts[0];
-				$field = $sortParts[1];
-			}
-			$order = isset($this->piVars['order']) ? $this->piVars['order'] : 'asc';
-			$orderby = array(0 => array('table' => $table, 'field' => $field, 'order' => $order));
-			$filter['orderby'] = $orderby;
-
-			// If there were no variables, check a default sorting configuration
-		} elseif (!empty($this->conf['listView.']['sort'])) {
-			$sortParts = t3lib_div::trimExplode('.', $this->conf['listView.']['sort'], 1);
-			$table = '';
-			$field = $sortParts[0];
-			if (count($sortParts) == 2) {
-				$table = $sortParts[0];
-				$field = $sortParts[1];
-			}
-			$order = isset($this->conf['listView.']['order']) ? $this->conf['listView.']['order'] : 'asc';
-			$orderby = array(0 => array('table' => $table, 'field' => $field, 'order' => $order));
-			$filter['orderby'] = $orderby;
-		}
-
-			// Save the filter's hash in session
-		$cacheKey = $this->prefixId . '_filterCache_default_' . $this->cObj->data['uid'] . '_' . $GLOBALS['TSFE']->id;
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $cacheKey, $filter);
-
-		return $filter;
-	}
-
-	/**
 	 * This method gets a filter structure from a referenced Data Filter
 	 *
 	 * @param	string	$type: type of filter, either primary (default) or secondary
@@ -412,16 +318,19 @@ class tx_displaycontrolleradvanced extends tslib_pibase {
 		}
 			// Get the data filter
 		try {
-			$filterData = $this->getComponent('filter', $rank);
+			$filterData = $this->getAdvancedComponent('filter', $rank);
 			$datafilter = $this->getDataFilter($filterData);
+			
 				// Initialise the filter
 			$filter = $this->initFilter($filterData['uid_foreign']);
 				// Pass the cached filter to the DataFilter
 			$datafilter->setFilter($filter);
 			try {
 				$filter = $datafilter->getFilterStructure();
+
 					// Store the filter in session
 				$cacheKey = $this->prefixId . '_filterCache_' . $filterData['uid_foreign'] . '_' . $this->cObj->data['uid'] . '_' . $GLOBALS['TSFE']->id;
+
 				$GLOBALS['TSFE']->fe_user->setKey('ses', $cacheKey, $filter);
 					// Here handle case where the "filters" part of the filter is empty
 					// If the display nothing flag has been set, we must somehow stop the process

@@ -73,19 +73,19 @@ $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
 				)
 			)
 		),
-		'tx_displaycontroller_filtertype' => array (
-			'exclude' => 0,
-			'label' => 'LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype',
-			'config' => array (
-				'type' => 'radio',
-				'items' => array (
-					array('LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype.I.0', ''),
-					array('LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype.I.1', 'single'),
-					array('LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype.I.2', 'list'),
-					array('LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype.I.3', 'filter'),
-				),
-			)
-		),
+//		'tx_displaycontroller_filtertype' => array (
+//			'exclude' => 0,
+//			'label' => 'LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype',
+//			'config' => array (
+//				'type' => 'radio',
+//				'items' => array (
+//					array('LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype.I.0', ''),
+//					array('LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype.I.1', 'single'),
+//					array('LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype.I.2', 'list'),
+//					array('LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_filtertype.I.3', 'filter'),
+//				),
+//			)
+//		),
 		'tx_displaycontroller_datafilter' => array (
 			'exclude' => 0,
 			'label' => 'LLL:EXT:displaycontroller/locallang_db.xml:tt_content.tx_displaycontroller_datafilter',
@@ -214,7 +214,7 @@ $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
 		'0' => array('showitem' => 'hidden;;;;1-1-1, title;;1;;2-2-2,tx_displaycontroller_provider;;' . $_EXTKEY . '_1;;2-2-2,  tx_displaycontroller_provider2;;' . $_EXTKEY . '_2;;2-2-2, tx_displaycontroller_emptyprovider2 ')
 	),
 	'palettes' => array(
-		$_EXTKEY . '_1' => array('showitem' => 'tx_displaycontroller_filtertype, tx_displaycontroller_datafilter, tx_displaycontroller_emptyfilter'),
+		$_EXTKEY . '_1' => array('showitem' => 'tx_displaycontroller_datafilter, tx_displaycontroller_emptyfilter'),
 		$_EXTKEY . '_2' => array('showitem' => 'tx_displaycontroller_datafilter2, tx_displaycontroller_emptyfilter2'),
 	)
 );
