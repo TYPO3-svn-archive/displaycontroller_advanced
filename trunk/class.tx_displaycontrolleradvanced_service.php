@@ -25,15 +25,15 @@
 require_once(t3lib_extMgm::extPath('tesseract', 'services/class.tx_tesseract_controllerbase.php'));
 
 /**
- * Service for the 'displaycontroller' extension.
+ * Service for the 'displaycontrolleradvanced' extension.
  *
  * @author		Francois Suter (Cobweb) <typo3@cobweb.ch>
  * @package		TYPO3
- * @subpackage	tx_displaycontroller
+ * @subpackage	tx_displaycontrolleradvanced
  *
  * $Id$
  */
-class tx_displaycontroller_service extends tx_tesseract_controllerbase {
+class tx_displaycontrolleradvanced_service extends tx_tesseract_controllerbase {
 	/**
      * This method is expected to return the primary provider related to the given display controller instance
      * 

@@ -26,7 +26,7 @@ require_once(PATH_tslib . 'class.tslib_pibase.php');
 require_once(t3lib_extMgm::extPath('tesseract', 'lib/class.tx_tesseract_utilities.php'));
 
 /**
- * Plugin 'Display Controller (cached)' for the 'displaycontroller' extension.
+ * Plugin 'Display Controller (cached)' for the 'displaycontrolleradvanced' extension.
  *
  * @author		Francois Suter (Cobweb) <typo3@cobweb.ch>
  * @package		TYPO3
@@ -34,9 +34,9 @@ require_once(t3lib_extMgm::extPath('tesseract', 'lib/class.tx_tesseract_utilitie
  *
  * $Id$
  */
-class tx_displaycontroller extends tslib_pibase {
+class tx_displaycontrolleradvanced extends tslib_pibase {
 	public $prefixId	= 'tx_displaycontroller';		// Same as class name
-	public $extKey		= 'displaycontroller';	// The extension key.
+	public $extKey		= 'displaycontroller_advanced';	// The extension key.
 	protected static $consumer; // Contains a reference to the Data Consumer object
 	protected $passStructure = TRUE; // Set to FALSE if Data Consumer should not receive the structure
 	protected $debug = FALSE; // Debug flag
@@ -53,7 +53,7 @@ class tx_displaycontroller extends tslib_pibase {
 			$this->debug = TRUE;
 		}
 			// Merge the configuration of the pi* plugin with the general configuration
-			// defined with plugin.tx_displaycontroller (if defined)
+			// defined with plugin.tx_displaycontrolleradvanced (if defined)
 		if (isset($GLOBALS['TSFE']->tmpl->setup['plugin.'][$this->prefixId . '.'])) {
 			$this->conf = t3lib_div::array_merge_recursive_overrule($conf, $GLOBALS['TSFE']->tmpl->setup['plugin.'][$this->prefixId.'.']);
 		}
@@ -96,7 +96,7 @@ class tx_displaycontroller extends tslib_pibase {
 			$GLOBALS['TSFE']->tesseract = $extraData;
 		}
 			// Load context from the context extension (if installed)
-			// This is necessary when the displaycontroller is called as a USER_INT,
+			// This is necessary when the displaycontrolleradvanced is called as a USER_INT,
 			// because the loader of the context extension itself has not been called in a cached page
 			// The only drawback is that the context is loaded twice if the page is not in cache,
 			// but since this operation doesn't cost much it's acceptable to do it twice
@@ -120,127 +120,138 @@ class tx_displaycontroller extends tslib_pibase {
 	public function main($content, $conf) {
 		$this->init($conf);
 		$content = '';
-		$filter = array();
 
-			// Handle the secondary provider first
-		if (!empty($this->cObj->data['tx_displaycontroller_provider2'])) {
-				// Get the secondary data filter, if any
-			$secondaryFilter = $this->getEmptyFilter();
-			if (!empty($this->cObj->data['tx_displaycontroller_datafilter2'])) {
-				$secondaryFilter = $this->defineAdvancedFilter('secondary');
-			}
-				// Get the secondary provider if necessary,
-				// i.e. if the process was not blocked by the advanced filter (by setting the passStructure flag to false)
-			if ($this->passStructure) {
-				try {
-					$secondaryProviderData = $this->getComponent('provider', 2);
+		$providerGroups = $this->getDataProviderGroups($this->cObj->data['uid']);
+
+		foreach ($providerGroups as $this->data) {
+
+				// Handle the secondary provider first
+			if (!empty($this->data['tx_displaycontroller_provider2'])) {
+					// Get the secondary data filter, if any
+				$secondaryFilter = $this->getEmptyFilter();
+				if (!empty($this->data['tx_displaycontroller_datafilter2'])) {
+					$secondaryFilter = $this->defineAdvancedFilter('secondary');
+				}
+					// Get the secondary provider if necessary,
+					// i.e. if the process was not blocked by the advanced filter (by setting the passStructure flag to false)
+				if ($this->passStructure) {
 					try {
-						$secondaryProvider = $this->getDataProvider($secondaryProviderData);
-						$secondaryProvider->setDataFilter($secondaryFilter);
+						$secondaryProviderData = $this->getComponent('provider', 2);
+						try {
+							$secondaryProvider = $this->getDataProvider($secondaryProviderData);
+							$secondaryProvider->setDataFilter($secondaryFilter);
+						}
+							// Something happened, skip passing the structure to the Data Consumer
+						catch (Exception $e) {
+							$this->passStructure = FALSE;
+							if ($this->debug) {
+								echo 'Secondary provider set passStructure to false with the following exception: ' . $e->getMessage();
+							}
+						}
+					}
+					catch (Exception $e) {
+						// Nothing to do if no secondary provider was found
+					}
+				}
+			}
+
+				// Handle the primary provider
+				// Define the filter (if any)
+			try {
+				$filter = $this->definePrimaryFilter();
+			}
+			catch (Exception $e) {
+					// Issue warning (error?) if a problem occurred with the filter
+				if ($this->debug) {
+					echo 'The primary filter threw the following exception: ' . $e->getMessage();
+				}
+			}
+
+				// Get the primary data provider
+			try {
+				$primaryProviderData = $this->getAdvancedComponent('provider', 1);
+				if ($this->passStructure) {
+					try {
+						$primaryProvider = $this->getDataProvider($primaryProviderData, isset($secondaryProvider) ? $secondaryProvider : null);
+
+						$primaryProvider->setDataFilter($filter);
+							// If the secondary provider exists and the option was chosen
+							// to display everything in the primary provider, no matter what
+							// the result from the secondary provider, make sure to set
+							// the empty data structure flag to false, otherwise nothing will display
+						if (isset($secondaryProvider) && !empty($this->data['tx_displaycontroller_emptyprovider2'])) {
+							$primaryProvider->setEmptyDataStructureFlag(FALSE);
+						}
 					}
 						// Something happened, skip passing the structure to the Data Consumer
 					catch (Exception $e) {
 						$this->passStructure = FALSE;
 						if ($this->debug) {
-							echo 'Secondary provider set passStructure to false with the following exception: ' . $e->getMessage();
+							echo 'Primary provider set passStructure to false with the following exception: '.$e->getMessage();
 						}
 					}
 				}
-				catch (Exception $e) {
-					// Nothing to do if no secondary provider was found
-				}
-			}
-		}
 
-			// Handle the primary provider
-			// Define the filter (if any)
-		try {
-			$filter = $this->definePrimaryFilter();
-		}
-		catch (Exception $e) {
-				// Issue warning (error?) if a problem occurred with the filter
-			if ($this->debug) {
-				echo 'The primary filter threw the following exception: ' . $e->getMessage();
-			}
-		}
-
-			// Get the primary data provider
-		try {
-			$primaryProviderData = $this->getComponent('provider', 1);
-				// Get the primary data provider, if necessary
-			if ($this->passStructure) {
+					// Get the data consumer
 				try {
-					$primaryProvider = $this->getDataProvider($primaryProviderData, isset($secondaryProvider) ? $secondaryProvider : null);
-					$primaryProvider->setDataFilter($filter);
-						// If the secondary provider exists and the option was chosen
-						// to display everything in the primary provider, no matter what
-						// the result from the secondary provider, make sure to set
-						// the empty data structure flag to false, otherwise nothing will display
-					if (isset($secondaryProvider) && !empty($this->cObj->data['tx_displaycontroller_emptyprovider2'])) {
-						$primaryProvider->setEmptyDataStructureFlag(FALSE);
+					if (!isset($consumerData)) {
+						$consumerData = $this->getComponent('consumer');
 					}
-				}
-					// Something happened, skip passing the structure to the Data Consumer
-				catch (Exception $e) {
-					$this->passStructure = FALSE;
-					if ($this->debug) {
-						echo 'Primary provider set passStructure to false with the following exception: '.$e->getMessage();
-					}
-				}
-			}
+					try {
 
-				// Get the data consumer
-			try {
-				$consumerData = $this->getComponent('consumer');
-				try {
-					self::$consumer = $this->getDataConsumer($consumerData);
-						// Pass reference to current object and appropriate TypoScript to consumer
-					self::$consumer->setParentReference($this);
-					$typoscriptConfiguration = isset($GLOBALS['TSFE']->tmpl->setup['plugin.'][self::$consumer->getTypoScriptKey()]) ? $GLOBALS['TSFE']->tmpl->setup['plugin.'][self::$consumer->getTypoScriptKey()] : array();
-					self::$consumer->setTypoScript($typoscriptConfiguration);
-					self::$consumer->setDataFilter($filter);
-						// If the structure shoud be passed to the consumer, do it now and get the rendered content
-					if ($this->passStructure) {
-							// Check if provided data structure is compatible with Data Consumer
-						if (self::$consumer->acceptsDataStructure($primaryProvider->getProvidedDataStructure())) {
-								// Get the data structure and pass it to the consumer
-							$structure = $primaryProvider->getDataStructure();
-								// Check if there's a redirection configuration
-							$this->handleRedirection($structure);
-								// Pass the data structure to the consumer
-							self::$consumer->setDataStructure($structure);
-								// Start the processing and get the rendered data
-							self::$consumer->startProcess();
+						if (!isset(self::$consumer)) {
+							self::$consumer = $this->getDataConsumer($consumerData);
+								// Pass reference to current object and appropriate TypoScript to consumer
+							self::$consumer->setParentReference($this);
+							$typoscriptConfiguration = isset($GLOBALS['TSFE']->tmpl->setup['plugin.'][self::$consumer->getTypoScriptKey()]) ? $GLOBALS['TSFE']->tmpl->setup['plugin.'][self::$consumer->getTypoScriptKey()] : array();
+							self::$consumer->setTypoScript($typoscriptConfiguration);
+							self::$consumer->setDataFilter($filter);
+						}
+							// If the structure shoud be passed to the consumer, do it now and get the rendered content
+						if ($this->passStructure) {
+								// Check if provided data structure is compatible with Data Consumer
+							if (self::$consumer->acceptsDataStructure($primaryProvider->getProvidedDataStructure())) {
+									// Get the data structure and pass it to the consumer
+								$structure = $primaryProvider->getDataStructure();
+									// Check if there's a redirection configuration
+								$this->handleRedirection($structure);
+									// Pass the data structure to the consumer
+								self::$consumer->setDataStructure($structure);
+							} else {
+								// TODO: Issue error if data structures are not compatible between provider and consumer
+							}
+						}
+							// If no structure should be passed (see defineFilter()),
+							// don't pass structure :-), but still do the rendering
+							// (this gives the opportunity to the consumer to render its own error content, for example)
+							// This is achieved by not calling startProcess(), but just getResult()
+						else {
 							$content = self::$consumer->getResult();
-						} else {
-							// TODO: Issue error if data structures are not compatible between provider and consumer
 						}
 					}
-						// If no structure should be passed (see defineFilter()),
-						// don't pass structure :-), but still do the rendering
-						// (this gives the opportunity to the consumer to render its own error content, for example)
-						// This is achieved by not calling startProcess(), but just getResult()
-					else {
-						$content = self::$consumer->getResult();
+					catch (Exception $e) {
+						if ($this->debug) {
+							echo 'Could not get the data consumer. The following exception was returned: '.$e->getMessage();
+						}
 					}
 				}
 				catch (Exception $e) {
 					if ($this->debug) {
-						echo 'Could not get the data consumer. The following exception was returned: '.$e->getMessage();
+						echo 'An error occurred querying the database for the data consumer.';
 					}
 				}
 			}
 			catch (Exception $e) {
 				if ($this->debug) {
-					echo 'An error occurred querying the database for the data consumer.';
+					echo 'An error occurred querying the database for the primary data provider.';
 				}
 			}
-		}
-		catch (Exception $e) {
-			if ($this->debug) {
-				echo 'An error occurred querying the database for the primary data provider.';
-			}
-		}
+
+		} // endforeach
+
+		// Start the processing and get the rendered data
+		self::$consumer->startProcess();
+		$content = self::$consumer->getResult();
 		return $content;
 	}
 
@@ -252,8 +263,8 @@ class tx_displaycontroller extends tslib_pibase {
 	 */
 	protected function definePrimaryFilter() {
 		$filter = $this->getEmptyFilter();
-		if (!empty($this->cObj->data['tx_displaycontroller_filtertype'])) {
-			switch ($this->cObj->data['tx_displaycontroller_filtertype']) {
+		if (!empty($this->data['tx_displaycontroller_filtertype'])) {
+			switch ($this->data['tx_displaycontroller_filtertype']) {
 
 					// Simple filter for single view
 					// We expect the "table" and "showUid" parameters and assemble a filter based on those values
@@ -482,6 +493,47 @@ class tx_displaycontroller extends tslib_pibase {
 	}
 
 	/**
+	 * This method is used to retrieve any of the advanced components related to the controller
+	 * An exception is thrown if none is found
+	 *
+	 * @param	string	$component: type of component (provider, consumer, filter)
+	 * @param	integer	$rank: level of the component (1 = primary, 2 = secondary)
+	 * @return	array	Database record from the MM-table linking the controller to its components
+	 */
+	protected function getAdvancedComponent($component, $rank = 1) {
+		$componentData = array();
+		$hasComponent = FALSE;
+		$whereClause = "component = '" . $component . "' AND rank = '" . $rank . "'";
+			// If the content element has been localized, check for component
+			// as related to localized uid
+		if (!empty($this->cObj->data['_LOCALIZED_UID'])) {
+			$where = $whereClause . " AND uid_local = '" . $this->cObj->data['_LOCALIZED_UID'] . "'";
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_displaycontrolleradvanced_components_mm', $where);
+			if ($res && $GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
+				$componentData = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				$hasComponent = TRUE;
+			}
+		}
+			// If no localized relation exists, check for component as related
+			// to original uid
+		if (!$hasComponent) {
+			$where = $whereClause . " AND uid_local = '" . $this->data['uid'] . "'";
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_displaycontrolleradvanced_components_mm', $where);
+			$request = $GLOBALS['TYPO3_DB']->SELECTquery('*', 'tx_displaycontrolleradvanced_components_mm', $where);
+			if ($res && $GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
+				$componentData = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				$hasComponent = TRUE;
+			}
+		}
+
+		if (!$hasComponent) {
+			$message = 'No component of type ' . $component . ' and level ' . $rank . ' found';
+			throw new Exception($message, 1265577739);
+		}
+		return $componentData;
+	}
+
+	/**
 	 * This method is used to retrieve any of the components related to the controller
 	 * An exception is thrown if none is found
 	 * 
@@ -518,6 +570,23 @@ class tx_displaycontroller extends tslib_pibase {
 			throw new Exception($message, 1265577739);
 		}
 		return $componentData;
+	}
+
+	/**
+	 * This method gets the data provider group
+	 *
+	 * @param	int		$uid: the uid of the current tt_content record
+	 * @return	array	array containing provider groups
+	 */
+	public function getDataProviderGroups($uid) {
+			/* @var $TYPO3_DB t3lib_DB */
+		global $TYPO3_DB;
+
+		$whereClause = 'content = ' . $uid . ' ';
+		$whereClause .= $GLOBALS['TSFE']->sys_page->enableFields('tx_displaycontrolleradvanced_providergroup');
+		$providerGroups = $TYPO3_DB->exec_SELECTgetRows('*', 'tx_displaycontrolleradvanced_providergroup', $whereClause);
+
+		return $providerGroups;
 	}
 
 	/**
