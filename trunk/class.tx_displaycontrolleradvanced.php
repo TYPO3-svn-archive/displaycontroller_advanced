@@ -22,9 +22,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(PATH_tslib . 'class.tslib_pibase.php');
-require_once(t3lib_extMgm::extPath('tesseract', 'lib/class.tx_tesseract_utilities.php'));
-
 /**
  * Plugin 'Display Controller (cached)' for the 'displaycontrolleradvanced' extension.
  *
@@ -34,7 +31,7 @@ require_once(t3lib_extMgm::extPath('tesseract', 'lib/class.tx_tesseract_utilitie
  *
  * $Id$
  */
-class tx_displaycontrolleradvanced extends tslib_pibase {
+class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_datacontroller_output {
 	public $prefixId	= 'tx_displaycontroller';		// Same as class name
 	public $extKey		= 'displaycontroller_advanced';	// The extension key.
 	protected static $consumer; // Contains a reference to the Data Consumer object
@@ -62,7 +59,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase {
 		}
 
 			// Override standard piVars definition
-		$this->piVars = t3lib_div::GParrayMerged($this->prefixId);
+		$this->piVars = t3lib_div::_GPmerged($this->prefixId);
 			// Finally load some additional data into the parser
 		$this->loadParserData();
 	}
@@ -95,17 +92,6 @@ class tx_displaycontrolleradvanced extends tslib_pibase {
 				// This was added so that context can be available in the local TS of the templatedisplay
 				// We must find another solution so that the templatedisplay's TS can use the tx_expressions_parser
 			$GLOBALS['TSFE']->tesseract = $extraData;
-		}
-			// Load context from the context extension (if installed)
-			// This is necessary when the displaycontrolleradvanced is called as a USER_INT,
-			// because the loader of the context extension itself has not been called in a cached page
-			// The only drawback is that the context is loaded twice if the page is not in cache,
-			// but since this operation doesn't cost much it's acceptable to do it twice
-			// (and it doesn't break anything)
-		if (!$this->pi_checkCHash && t3lib_extMgm::isLoaded('context')) {
-			require_once(t3lib_extMgm::extPath('context', 'class.tx_context.php'));
-			$context = t3lib_div::makeInstance('tx_context');
-			$context->handleContext();
 		}
 	}
 
@@ -584,7 +570,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase {
 		return $content;
 	}
 
-// Getters and setters
+// tx_tesseract_datacontroller_output interface methods
 
 	/**
 	 * This method returns the plug-in's prefix id
