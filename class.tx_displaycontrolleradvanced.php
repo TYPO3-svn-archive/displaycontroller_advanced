@@ -271,7 +271,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 			if (empty($key)) {
 				$key = 'default';
 			}
-			$cacheKey = $this->prefixId . '_filterCache_' . $key . '_' . $this->cObj->data['uid'] . '_' . $GLOBALS['TSFE']->id;
+			$cacheKey = $this->prefixId . '_filterCache_' . $key . '_providergroup_' . $this->data['uid'] . '_' . $GLOBALS['TSFE']->id;
 			$cache = $GLOBALS['TSFE']->fe_user->getKey('ses', $cacheKey);
 			if (isset($cache)) {
 				$filter = $cache;
@@ -315,14 +315,14 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 				$filter = $datafilter->getFilterStructure();
 
 					// Store the filter in session
-				$cacheKey = $this->prefixId . '_filterCache_' . $filterData['uid_foreign'] . '_' . $this->cObj->data['uid'] . '_' . $GLOBALS['TSFE']->id;
+				$cacheKey = $this->prefixId . '_filterCache_' . $filterData['uid_foreign'] . '_providergroup_' . $this->data['uid'] . '_' . $GLOBALS['TSFE']->id;
 
 				$GLOBALS['TSFE']->fe_user->setKey('ses', $cacheKey, $filter);
 					// Here handle case where the "filters" part of the filter is empty
 					// If the display nothing flag has been set, we must somehow stop the process
 					// The Data Provider should not even be called at all
 					// and the Data Consumer should receive an empty (special?) structure
-				if (count($filter['filters']) == 0 && empty($this->cObj->data[$checkField])) {
+				if (count($filter['filters']) == 0 && empty($this->data[$checkField])) {
 					$this->passStructure = FALSE;
 				}
 			}
