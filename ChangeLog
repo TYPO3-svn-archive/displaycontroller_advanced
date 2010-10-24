@@ -1,3 +1,6 @@
-2010-09-27 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
+2010-10-24 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
+	* "If filter empty" field is ignored
+	* General configuration overrides local configuration -> displaycontroller #10410
 
+2010-09-27 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
 	* first release
