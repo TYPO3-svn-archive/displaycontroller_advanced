@@ -52,7 +52,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 			// Merge the configuration of the pi* plugin with the general configuration
 			// defined with plugin.tx_displaycontrolleradvanced (if defined)
 		if (isset($GLOBALS['TSFE']->tmpl->setup['plugin.'][$this->prefixId . '.'])) {
-			$this->conf = t3lib_div::array_merge_recursive_overrule($conf, $GLOBALS['TSFE']->tmpl->setup['plugin.'][$this->prefixId.'.']);
+			$this->conf = t3lib_div::array_merge_recursive_overrule($GLOBALS['TSFE']->tmpl->setup['plugin.'][$this->prefixId.'.'], $conf);
 		}
 		else {
 			$this->conf = $conf;
@@ -582,8 +582,6 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 	}
 
 }
-
-
    
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller/class.tx_displaycontroller.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller/class.tx_displaycontroller.php']);
