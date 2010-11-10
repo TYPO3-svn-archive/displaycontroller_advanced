@@ -111,6 +111,7 @@ t3lib_div::loadTCA('tx_displaycontrolleradvanced_providergroup');
 $TCA['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_provider']['config']['allowed'] .= ',tx_dataquery_queries';
 $TCA['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter']['config']['allowed'] .= ',tx_datafilter_filters';
 $TCA['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'] .= ',tx_datafilter_filters';
+$TCA['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_provider2']['config']['allowed'] .= ',tx_tagpackprovider_selections';
 
 	// Add a wizard for adding a dataquery
 $addDataqueryWizard = array(
