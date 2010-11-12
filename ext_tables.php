@@ -142,4 +142,9 @@ $addDatafilteryWizard = array(
 $TCA['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter']['config']['wizards']['add_datafilter'] = $addDatafilteryWizard;
 $TCA['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter2']['config']['wizards']['add_datafilter2'] = $addDatafilteryWizard;
 
+	// Register wizards for plug-ins
+if (TYPO3_MODE == 'BE') {
+	$TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['tx_displaycontrolleradvanced_pi1_wizicon'] = t3lib_extMgm::extPath($_EXTKEY) . 'pi1/class.tx_displaycontrolleradvanced_pi1_wizicon.php';
+	$TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['tx_displaycontrolleradvanced_pi2_wizicon'] = t3lib_extMgm::extPath($_EXTKEY) . 'pi2/class.tx_displaycontrolleradvanced_pi2_wizicon.php';
+}
 ?>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for extension 'displaycontroller_advanced'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="config_debug">Debug: Turn debugging on or off. Requires a devlog-enabling extension (e.g. "devlog").</label>
+			<label index="pi1_title">Display Controller Advanced (cached)</label>
+			<label index="pi1_plus_wiz_description">Create a fully-cached Display Controller Advanced.</label>
+			<label index="pi2_title">Display Controller Advanced (not cached)</label>
+			<label index="pi2_plus_wiz_description">Create a non-cached Display Controller Advanced. This should be chosen only if needed, for example in case of a search function.</label>
+		</languageKey>
+	</data>
+</T3locallang>
