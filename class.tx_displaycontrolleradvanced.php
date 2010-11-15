@@ -123,7 +123,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 					// i.e. if the process was not blocked by the advanced filter (by setting the passStructure flag to false)
 				if ($this->passStructure) {
 					try {
-						$secondaryProviderData = $this->getComponent('provider', 2);
+						$secondaryProviderData = $this->getAdvancedComponent('provider', 2);
 						try {
 							$secondaryProvider = $this->getDataProvider($secondaryProviderData);
 							$secondaryProvider->setDataFilter($secondaryFilter);
@@ -165,7 +165,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 				if ($this->passStructure) {
 					try {
 						$primaryProvider = $this->getDataProvider($primaryProviderData, isset($secondaryProvider) ? $secondaryProvider : null);
-
+ 
 						$primaryProvider->setDataFilter($filter);
 							// If the secondary provider exists and the option was chosen
 							// to display everything in the primary provider, no matter what
