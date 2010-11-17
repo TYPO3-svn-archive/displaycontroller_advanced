@@ -113,6 +113,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 		foreach ($providerGroups as $this->data) {
 
 				// Handle the secondary provider first
+			$secondaryProvider = null;
 			if (!empty($this->data['tx_displaycontroller_provider2'])) {
 					// Get the secondary data filter, if any
 				$secondaryFilter = $this->getEmptyFilter();
