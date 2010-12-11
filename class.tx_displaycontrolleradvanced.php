@@ -34,7 +34,7 @@
 class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_datacontroller_output {
 	public $prefixId	= 'tx_displaycontroller';		// Same as class name
 	public $extKey		= 'displaycontroller_advanced';	// The extension key.
-	protected static $consumer; // Contains a reference to the Data Consumer object
+	protected $consumer; // Contains a reference to the Data Consumer object
 	protected $passStructure = TRUE; // Set to FALSE if Data Consumer should not receive the structure
 	protected $debug = FALSE; // Debug flag
 
@@ -192,24 +192,24 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 					}
 					try {
 
-						if (!isset(self::$consumer)) {
-							self::$consumer = $this->getDataConsumer($consumerData);
+						if (!isset($this->consumer)) {
+							$this->consumer = $this->getDataConsumer($consumerData);
 								// Pass reference to current object and appropriate TypoScript to consumer
-							self::$consumer->setParentReference($this);
-							$typoscriptConfiguration = isset($GLOBALS['TSFE']->tmpl->setup['plugin.'][self::$consumer->getTypoScriptKey()]) ? $GLOBALS['TSFE']->tmpl->setup['plugin.'][self::$consumer->getTypoScriptKey()] : array();
-							self::$consumer->setTypoScript($typoscriptConfiguration);
-							self::$consumer->setDataFilter($filter);
+							$this->consumer->setParentReference($this);
+							$typoscriptConfiguration = isset($GLOBALS['TSFE']->tmpl->setup['plugin.'][$this->consumer->getTypoScriptKey()]) ? $GLOBALS['TSFE']->tmpl->setup['plugin.'][$this->consumer->getTypoScriptKey()] : array();
+							$this->consumer->setTypoScript($typoscriptConfiguration);
+							$this->consumer->setDataFilter($filter);
 						}
 							// If the structure shoud be passed to the consumer, do it now and get the rendered content
 						if ($this->passStructure) {
 								// Check if provided data structure is compatible with Data Consumer
-							if (self::$consumer->acceptsDataStructure($primaryProvider->getProvidedDataStructure())) {
+							if ($this->consumer->acceptsDataStructure($primaryProvider->getProvidedDataStructure())) {
 									// Get the data structure and pass it to the consumer
 								$structure = $primaryProvider->getDataStructure();
 									// Check if there's a redirection configuration
 								$this->handleRedirection($structure);
 									// Pass the data structure to the consumer
-								self::$consumer->setDataStructure($structure);
+								$this->consumer->setDataStructure($structure);
 							} else {
 								// TODO: Issue error if data structures are not compatible between provider and consumer
 							}
@@ -219,7 +219,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 							// (this gives the opportunity to the consumer to render its own error content, for example)
 							// This is achieved by not calling startProcess(), but just getResult()
 						else {
-							$content = self::$consumer->getResult();
+							$content = $this->consumer->getResult();
 						}
 					}
 					catch (Exception $e) {
@@ -243,8 +243,8 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 		} // endforeach
 
 		// Start the processing and get the rendered data
-		self::$consumer->startProcess();
-		$content = self::$consumer->getResult();
+		$this->consumer->startProcess();
+		$content = $this->consumer->getResult();
 		return $content;
 	}
 
@@ -566,8 +566,8 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 	 * @return	string		The content to display on the website
 	 */
 	public function sub($content, $conf) {
-		self::$consumer->setTypoScript($conf);
-		$content = self::$consumer->getSubResult();
+		$this->consumer->setTypoScript($conf);
+		$content = $this->consumer->getSubResult();
 		return $content;
 	}
 
