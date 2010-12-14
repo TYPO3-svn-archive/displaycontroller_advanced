@@ -35,7 +35,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 	public $prefixId	= 'tx_displaycontroller';		// Same as class name
 	public $extKey		= 'displaycontroller_advanced';	// The extension key.
 	protected $consumer; // Contains a reference to the Data Consumer object
-	protected $passStructure = TRUE; // Set to FALSE if Data Consumer should not receive the structure
+	protected $passStructure = array(); // Set to FALSE if Data Consumer should not receive the structure
 	protected $debug = FALSE; // Debug flag
 
 	/**
@@ -111,6 +111,9 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 		$providerGroups = $this->getDataProviderGroups($this->cObj->data['uid']);
 
 		foreach ($providerGroups as $this->data) {
+				// $this->passStructure should be unique for each loop
+			$this->providerGroupUid = $this->data['uid'];
+			$this->passStructure[$this->providerGroupUid] = TRUE;
 
 				// Handle the secondary provider first
 			$secondaryProvider = null;
@@ -122,7 +125,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 				}
 					// Get the secondary provider if necessary,
 					// i.e. if the process was not blocked by the advanced filter (by setting the passStructure flag to false)
-				if ($this->passStructure) {
+				if ($this->passStructure[$this->providerGroupUid]) {
 					try {
 						$secondaryProviderData = $this->getAdvancedComponent('provider', 2);
 						try {
@@ -131,7 +134,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 						}
 							// Something happened, skip passing the structure to the Data Consumer
 						catch (Exception $e) {
-							$this->passStructure = FALSE;
+							$this->passStructure[$this->providerGroupUid] = FALSE;
 							if ($this->debug) {
 								echo 'Secondary provider set passStructure to false with the following exception: ' . $e->getMessage();
 							}
@@ -163,7 +166,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 				// Get the primary data provider
 			try {
 				$primaryProviderData = $this->getAdvancedComponent('provider', 1);
-				if ($this->passStructure) {
+				if ($this->passStructure[$this->providerGroupUid]) {
 					try {
 						$primaryProvider = $this->getDataProvider($primaryProviderData, isset($secondaryProvider) ? $secondaryProvider : null);
  
@@ -178,7 +181,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 					}
 						// Something happened, skip passing the structure to the Data Consumer
 					catch (Exception $e) {
-						$this->passStructure = FALSE;
+						$this->passStructure[$this->providerGroupUid] = FALSE;
 						if ($this->debug) {
 							echo 'Primary provider set passStructure to false with the following exception: '.$e->getMessage();
 						}
@@ -201,7 +204,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 							$this->consumer->setDataFilter($filter);
 						}
 							// If the structure shoud be passed to the consumer, do it now and get the rendered content
-						if ($this->passStructure) {
+						if ($this->passStructure[$this->providerGroupUid]) {
 								// Check if provided data structure is compatible with Data Consumer
 							if ($this->consumer->acceptsDataStructure($primaryProvider->getProvidedDataStructure())) {
 									// Get the data structure and pass it to the consumer
@@ -324,7 +327,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 					// The Data Provider should not even be called at all
 					// and the Data Consumer should receive an empty (special?) structure
 				if (count($filter['filters']) == 0 && empty($this->data[$checkField])) {
-					$this->passStructure = FALSE;
+					$this->passStructure[$this->providerGroupUid] = FALSE;
 				}
 			}
 			catch (Exception $e) {
