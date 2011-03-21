@@ -1,3 +1,6 @@
+2011-03-20 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
+	* Removed dependency on extensions load order for allowed property, resolves #13937 (patch provided by François Suter)
+
 2010-10-24 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
 	* "If filter empty" field is ignored
 	* General configuration overrides local configuration -> displaycontroller #10410
