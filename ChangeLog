@@ -1,3 +1,6 @@
+2012-01-11 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+	* Implemented initialization of components using the new Tesseract API, resolves #33054
+
 2011-03-20 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
 	* Removed dependency on extensions load order for allowed property, resolves #13937 (patch provided by François Suter)
 
