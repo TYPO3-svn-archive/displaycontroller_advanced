@@ -34,7 +34,7 @@
 class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_datacontroller_output {
 	public $prefixId	= 'tx_displaycontroller';		// Same as class name
 	public $extKey		= 'displaycontroller_advanced';	// The extension key.
-	
+
 	/**
 	 * Contains a reference to the frontend Data Consumer object
 	 * @var tx_tesseract_feconsumerbase
@@ -215,8 +215,8 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 						}
 							// If the structure shoud be passed to the consumer, do it now and get the rendered content
 						if ($this->passStructure[$this->providerGroupUid]) {
-								// Check if provided data structure is compatible with Data Consumer
-							if ($this->consumer->acceptsDataStructure($primaryProvider->getProvidedDataStructure())) {
+								// Check if Data Provider can provide the right structure for the Data Consumer
+							if ($primaryProvider->providesDataStructure($this->consumer->getAcceptedDataStructure())) {
 									// Get the data structure and pass it to the consumer
 								$structure = $primaryProvider->getDataStructure();
 									// Check if there's a redirection configuration
@@ -533,7 +533,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 				// If a secondary provider is defined and the types are compatible,
 				// load it into the newly defined provider
 			if (isset($secondaryProvider)) {
-				if ($provider->acceptsDataStructure($secondaryProvider->getProvidedDataStructure())) {
+				if ($secondaryProvider->providesDataStructure($provider->getAcceptedDataStructure())) {
 					$inputDataStructure = $secondaryProvider->getDataStructure();
 						// If the secondary provider returned no list of items, force primary provider to return an empty structure
 					if ($inputDataStructure['count'] == 0) {
