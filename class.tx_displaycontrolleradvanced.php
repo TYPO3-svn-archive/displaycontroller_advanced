@@ -31,8 +31,11 @@
  *
  * $Id$
  */
-class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_datacontroller_output {
-	public $prefixId	= 'tx_displaycontroller';		// Same as class name
+
+require_once(t3lib_extMgm::extPath('tesseract', 'base/class.tx_tesseract_picontrollerbase.php'));
+
+class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
+	public $prefixId = 'tx_displaycontroller'; // Same as class name
 	public $extKey		= 'displaycontroller_advanced';	// The extension key.
 
 	/**
@@ -41,7 +44,6 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 	 */
 	protected $consumer;
 	protected $passStructure = array(); // Set to FALSE if Data Consumer should not receive the structure
-	protected $debug = FALSE; // Debug flag
 
 	/**
 	 * This method performs various initialisations
@@ -553,31 +555,7 @@ class tx_displaycontrolleradvanced extends tslib_pibase implements tx_tesseract_
 		}
 	}
 
-	/**
-	 * This method can be called instead of main() for rendering nested elements of a data structure
-	 * It avoids the full initialisation by refering to the consumer stored in a static variable
-	 *
-	 * @param	string		$content: the plugin's content
-	 * @param	array		$conf: limited TS configuration for the rendering of the nested element
-	 * @return	string		The content to display on the website
-	 */
-	public function sub($content, $conf) {
-		$this->consumer->setTypoScript($conf);
-		$content = $this->consumer->getSubResult();
-		return $content;
-	}
-
-// tx_tesseract_datacontroller_output interface methods
-
-	/**
-	 * This method returns the plug-in's prefix id
-	 *
-	 * @return	string	The plug-in's prefix id
-	 */
-	public function getPrefixId() {
-		return $this->prefixId;
-	}
-
+// Override tx_tesseract_pidatacontroller_output interface methods
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller/class.tx_displaycontroller.php'])	{
