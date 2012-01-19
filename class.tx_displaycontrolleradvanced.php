@@ -40,10 +40,71 @@ class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
 
 	/**
 	 * Contains a reference to the frontend Data Consumer object
+	 *
 	 * @var tx_tesseract_feconsumerbase
 	 */
 	protected $consumer;
-	protected $passStructure = array(); // Set to FALSE if Data Consumer should not receive the structure
+
+	/**
+	 * @var bool FALSE if Data Consumer should not receive the structure
+	 */
+	protected $passStructure = TRUE;
+
+	/**
+	 * @var array General extension configuration
+	 */
+	protected $extensionConfiguration = array();
+
+	/**
+	 * @var bool Debug to output or not
+	 */
+	protected $debugToOutput = FALSE;
+
+	/**
+	 * @var bool Debug to devlog or not
+	 */
+	protected $debugToDevLog = FALSE;
+
+	/**
+	 * @var int Minimum level of message to be logged. Default is all.
+	 */
+	protected $debugMinimumLevel = -1;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		// Read the general configuration and initialize the debug flags
+		$this->extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		if (!empty($this->extensionConfiguration['debug'])) {
+			$this->debug = TRUE;
+			switch ($this->extensionConfiguration['debug']) {
+				case 'output':
+					$this->debugToOutput = TRUE;
+					break;
+				case 'devlog':
+					$this->debugToDevLog = TRUE;
+					break;
+				case 'both':
+					$this->debugToOutput = TRUE;
+					$this->debugToDevLog = TRUE;
+					break;
+
+				// Turn off all debugging if no valid value was entered
+				default:
+					$this->debug = FALSE;
+					$this->debugToOutput = FALSE;
+					$this->debugToDevLog = FALSE;
+			}
+		}
+		// Make sure the minimum debugging level is set and has a correct value
+		if (isset($this->extensionConfiguration['minDebugLevel'])) {
+			$level = intval($this->extensionConfiguration['minDebugLevel']);
+			if ($level >= -1 && $level <= 3) {
+				$this->debugMinimumLevel = $level;
+			}
+		}
+	}
 
 	/**
 	 * This method performs various initialisations
@@ -51,11 +112,6 @@ class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
 	 * @return	void
 	 */
 	protected function init($conf) {
-			// Activate debug mode if BE user is logged in
-			// (other conditions may be added at a later point)
-		if (!empty($GLOBALS['TSFE']->beUserLogin)) {
-			$this->debug = TRUE;
-		}
 			// Merge the configuration of the pi* plugin with the general configuration
 			// defined with plugin.tx_displaycontrolleradvanced (if defined)
 		if (isset($GLOBALS['TSFE']->tmpl->setup['plugin.'][$this->prefixId . '.'])) {
@@ -121,7 +177,6 @@ class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
 				// $this->passStructure should be unique for each loop
 			$this->providerGroupUid = $this->data['uid'];
 			$this->passStructure[$this->providerGroupUid] = TRUE;
-
 				// Handle the secondary provider first
 			$secondaryProvider = null;
 			if (!empty($this->data['tx_displaycontroller_provider2'])) {
@@ -260,47 +315,43 @@ class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
 		// Start the processing and get the rendered data
 		$this->consumer->startProcess();
 		$content = $this->consumer->getResult();
+
+		// If debugging to output is active, prepend content with debugging messages
+		if ($this->debugToOutput) {
+			$content = $this->renderMessageQueue() . $content;
+		}
 		return $content;
 	}
 
 	/**
-	 * This method is used to return a clean, empty filter
+	 * Renders all messages and dumps their related data
 	 *
-	 * @return	array	Empty filter structure
+	 * @return string Debug output
 	 */
-	protected function getEmptyFilter() {
-		return array('filters' => array());
-	}
+	protected function renderMessageQueue() {
+		// Add t3skin stylesheets for proper display, if t3skin is loaded
+		if (t3lib_extMgm::isLoaded('t3skin')) {
+			/** @var $pageRenderer t3lib_PageRenderer */
+			$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
+			$pageRenderer->addCssFile(TYPO3_mainDir . t3lib_extMgm::extRelPath('t3skin') . 'stylesheets/structure/element_message.css');
+			$pageRenderer->addCssFile(TYPO3_mainDir . t3lib_extMgm::extRelPath('t3skin') . 'stylesheets/visual/element_message.css');
+		}
+		require_once(t3lib_extMgm::extPath($this->extKey, 'lib/kint/Kint.class.php'));
+		// Prepare the output and return it
+		$debugOutput = '';
+		foreach ($this->messageQueue as $messageData) {
+			$debugOutput .= $messageData['message']->render();
+			if ($messageData['data'] !== NULL) {
+				if (is_array($messageData['data'])) {
+					$debugData = $messageData['data'];
+				} else {
+					$debugData = array($messageData['data']);
+				}
+				$debugOutput .= @Kint::dump($debugData);
+			}
+		}
 
-	/**
-	 * This method is used to initialise the filter
-	 * This can be either an empty array or some structure already stored in cache
-	 *
-	 * @param	mixed	$key: a string or a number that identifies a given filter (for example, the uid of a DataFilter record)
-	 * @return	array	A filter structure or an empty array
-	 */
-	protected function initFilter($key = '') {
-		$filter = array();
-		$clearCache = isset($this->piVars['clear_cache']) ? $this->piVars['clear_cache'] : t3lib_div::_GP('clear_cache');
-			// If cache is not cleared, retrieve cached filter
-		if (empty($clearCache)) {
-			if (empty($key)) {
-				$key = 'default';
-			}
-			$cacheKey = $this->prefixId . '_filterCache_' . $key . '_providergroup_' . $this->data['uid'] . '_' . $GLOBALS['TSFE']->id;
-			$cache = $GLOBALS['TSFE']->fe_user->getKey('ses', $cacheKey);
-			if (isset($cache)) {
-				$filter = $cache;
-			}
-		}
-			// Declare hook for extending the initialisation of the filter
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['extendInitFilter'])) {
-			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['extendInitFilter'] as $className) {
-				$hookObject = t3lib_div::getUserObj($className);
-				$filter = $hookObject->extendInitFilter($filter, $this);
-			}
-		}
-		return $filter;
+		return $debugOutput;
 	}
 
 	/**
@@ -360,6 +411,45 @@ class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
 		return $filter;
 	}
 
+	/**
+	 * This method is used to return a clean, empty filter
+	 *
+	 * @return	array	Empty filter structure
+	 */
+	protected function getEmptyFilter() {
+		return array('filters' => array());
+	}
+
+	/**
+	 * This method is used to initialise the filter
+	 * This can be either an empty array or some structure already stored in cache
+	 *
+	 * @param	mixed	$key: a string or a number that identifies a given filter (for example, the uid of a DataFilter record)
+	 * @return	array	A filter structure or an empty array
+	 */
+	protected function initFilter($key = '') {
+		$filter = array();
+		$clearCache = isset($this->piVars['clear_cache']) ? $this->piVars['clear_cache'] : t3lib_div::_GP('clear_cache');
+		// If cache is not cleared, retrieve cached filter
+		if (empty($clearCache)) {
+			if (empty($key)) {
+				$key = 'default';
+			}
+			$cacheKey = $this->prefixId . '_filterCache_' . $key . '_providergroup_' . $this->data['uid'] . '_' . $GLOBALS['TSFE']->id;
+			$cache = $GLOBALS['TSFE']->fe_user->getKey('ses', $cacheKey);
+			if (isset($cache)) {
+				$filter = $cache;
+			}
+		}
+		// Declare hook for extending the initialisation of the filter
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['extendInitFilter'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['extendInitFilter'] as $className) {
+				$hookObject = t3lib_div::getUserObj($className);
+				$filter = $hookObject->extendInitFilter($filter, $this);
+			}
+		}
+		return $filter;
+	}
 	/**
 	 * This method checks whether a redirection is defined
 	 * If yes and if the conditions match, it performs the redirection
