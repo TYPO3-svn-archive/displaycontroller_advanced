@@ -48,7 +48,7 @@ class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
 	/**
 	 * @var bool FALSE if Data Consumer should not receive the structure
 	 */
-	protected $passStructure = TRUE;
+	protected $passStructure = array();
 
 	/**
 	 * @var array General extension configuration
