@@ -1,13 +1,21 @@
+2012-01-27 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Ported all relevant debugging-related changes from displaycontroller, resolves #33307
+
 2012-01-11 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
 	* Implemented initialization of components using the new Tesseract API, resolves #33054
 	* Changed compatibility check between Primary Data Provider and Data Consumer, resolves #33041
 
 2011-03-20 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
+
 	* Removed dependency on extensions load order for allowed property, resolves #13937 (patch provided by François Suter)
 
 2010-10-24 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
+
 	* "If filter empty" field is ignored
 	* General configuration overrides local configuration -> displaycontroller #10410
 
 2010-09-27 Fabien Udriot (Ecodev)  <fabien.udriot@ecodev.ch>
+
 	* first release
