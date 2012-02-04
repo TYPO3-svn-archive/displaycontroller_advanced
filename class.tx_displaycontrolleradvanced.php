@@ -317,7 +317,7 @@ class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
 		$content = $this->consumer->getResult();
 
 			// If debugging to output is active, prepend content with debugging messages
-		if ($this->debugToOutput) {
+		if ($this->debugToOutput && isset($GLOBALS['BE_USER'])) {
 				/** @var $debugger tx_displaycontroller_debugger */
 			$debugger = NULL;
 				// If a custom debugging class is declared, get an instance of it
