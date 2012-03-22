@@ -1,3 +1,7 @@
+2012-03-22 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Implemented new process for creating empty date structures, resolves #35055
+
 2012-01-27 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Ported all relevant debugging-related changes from displaycontroller, resolves #33307

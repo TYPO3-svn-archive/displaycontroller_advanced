@@ -615,7 +615,7 @@ class tx_displaycontrolleradvanced extends tx_tesseract_picontrollerbase {
 					$inputDataStructure = $secondaryProvider->getDataStructure();
 						// If the secondary provider returned no list of items, force primary provider to return an empty structure
 					if ($inputDataStructure['count'] == 0) {
-						$provider->initEmptyDataStructure($inputDataStructure['uniqueTable']);
+						$provider->setEmptyDataStructureFlag(TRUE);
 
 						// Otherwise pass structure to primary provider
 					} else {
