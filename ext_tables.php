@@ -67,15 +67,42 @@ $showItem .= ', --div--;LLL:EXT:cms/locallang_tca.xml:pages.tabs.access, startti
 
 $TCA['tt_content']['types'][$_EXTKEY . '_pi1']['showitem'] = $showItem;
 $TCA['tt_content']['types'][$_EXTKEY . '_pi2']['showitem'] = $showItem;
-$TCA['tt_content']['ctrl']['typeicons'][$_EXTKEY . '_pi1'] = t3lib_extMgm::extRelPath($_EXTKEY) . 'ext_typeicon.gif';
-$TCA['tt_content']['ctrl']['typeicons'][$_EXTKEY . '_pi2'] = t3lib_extMgm::extRelPath($_EXTKEY) . 'ext_typeicon.gif';
+
+	// Register icons for content type
+	// Define classes and register icon files with Sprite Manager
+$TCA['tt_content']['ctrl']['typeicon_classes'][$_EXTKEY . '_pi1'] =  'extensions-displaycontroller_advanced-type-controller';
+$TCA['tt_content']['ctrl']['typeicon_classes'][$_EXTKEY . '_pi2'] =  'extensions-displaycontroller_advanced-type-controller';
+
+	// Register icon in the BE and for FE editing (code taken from TemplaVoilà)
+if (TYPO3_MODE == 'BE' ||
+	(TYPO3_MODE == 'FE' && isset($GLOBALS['BE_USER']) && method_exists($GLOBALS['BE_USER'], 'isFrontendEditingActive')  && $GLOBALS['BE_USER']->isFrontendEditingActive())
+) {
+	$icons = array(
+		'type-controller' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/displaycontroller_advanced_typeicon.png'
+	);
+	t3lib_SpriteManager::addSingleIcons($icons, $_EXTKEY);
+}
 
 	// Add context sensitive help (csh) for the new fields
 t3lib_extMgm::addLLrefForTCAdescr('tt_content', 'EXT:' . $_EXTKEY . '/locallang_csh_ttcontent.xml');
 
 	// Register plug-ins (pi1 is cached, pi2 is not cached)
-t3lib_extMgm::addPlugin(array('LLL:EXT:displaycontroller_advanced/locallang_db.xml:tt_content.CType_pi1', $_EXTKEY . '_pi1', t3lib_extMgm::extRelPath($_EXTKEY) . 'ext_typeicon.gif'), 'CType');
-t3lib_extMgm::addPlugin(array('LLL:EXT:displaycontroller_advanced/locallang_db.xml:tt_content.CType_pi2', $_EXTKEY . '_pi2', t3lib_extMgm::extRelPath($_EXTKEY) . 'ext_typeicon.gif'), 'CType');
+t3lib_extMgm::addPlugin(
+	array(
+		'LLL:EXT:displaycontroller_advanced/locallang_db.xml:tt_content.CType_pi1',
+		$_EXTKEY . '_pi1',
+		t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/displaycontroller_advanced_typeicon.png'
+	),
+	'CType'
+);
+t3lib_extMgm::addPlugin(
+	array(
+		'LLL:EXT:displaycontroller_advanced/locallang_db.xml:tt_content.CType_pi2',
+		$_EXTKEY . '_pi2',
+		t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/displaycontroller_advanced_typeicon.png'
+	),
+	'CType'
+);
 
 	// Register the name of the table linking the controller and its components
 #$T3_VAR['EXT']['tesseract']['controller_mm_tables'][] = 'tx_displaycontrolleradvanced_components_mm';

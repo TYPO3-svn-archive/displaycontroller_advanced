@@ -44,7 +44,7 @@ class tx_displaycontrolleradvanced_pi1_wizicon {
 		$LL = $this->includeLocalLang();
 
 		$wizardItems['plugins_tx_displaycontrolleradvanced_pi1'] = array(
-			'icon' => t3lib_extMgm::extRelPath('displaycontroller_advanced') . 'wizard_icon.gif',
+			'icon' => t3lib_extMgm::extRelPath('displaycontroller_advanced') . 'Resources/Public/Images/wizard_icon.png',
 			'title' => $GLOBALS['LANG']->getLLL('pi1_title', $LL),
 			'description' => $GLOBALS['LANG']->getLLL('pi1_plus_wiz_description', $LL),
 			'params' => '&defVals[tt_content][CType]=displaycontroller_advanced_pi1'

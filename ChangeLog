@@ -1,3 +1,8 @@
+2012-06-26 Francois Suter (Cobweb)  <typo3@cobweb.ch>
+
+	* Switched to the sprite manager for plugin icons, resolves #38356
+	* Changed icons to distinguish from displaycontroller, references #38356
+
 2012-04-19 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
 	* Released to TER as version 1.2.0
