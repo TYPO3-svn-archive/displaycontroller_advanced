@@ -3,7 +3,7 @@ EXT: Display Controller Advanced
 Extension Key: displaycontroller_advanced
 Language: en
 Keywords: forEditors, forIntermediates
-Copyright 2000-2010, Fabien Udriot, <fabien.udriot@ecodev.ch>
+Copyright 2000-2012, Fabien Udriot, <fabien.udriot@ecodev.ch>
 
 This document is published under the Open Content License
 available from http://www.opencontent.org/opl.shtml
@@ -18,12 +18,12 @@ What does it do?	3
 Screenshots	3
 Questions?	3
 Keeping the developer happy	4
+Configuration	4
 Users manual	5
 Setting up a display controller advanced 	5
 Multiple Data Structure	5
 Configuration	7
 Bug reporting	8
-ChangeLog	9
 
 Introduction
 What does it do?
@@ -37,6 +37,8 @@ If you have any questions about this extension, you may want to refer to the Tes
 Keeping the developer happy
 If you like this extension, do not hesitate to rate it. Go the Extension Repository, search for this extension, click on its title to go to the details view, then click on the “Ratings” tab and vote (you need to be logged in). Every new vote keeps the developer ticking. So just do it!
 You may also take a step back and reflect about the beauty of sharing. Think about how much you are benefiting and how much yourself is giving back to the community.
+Configuration
+As of version 1.3.0, TYPO3 4.5 or more is required.
 Users manual
 Setting up a display controller advanced 
 1. Create a new record of type tt_content and change the record type to "Display Controller Advanced (not cached)" or to "Display Controller Advanced (cached)" according to the case. "Cached" means the extension will be of type USER and will thusly use the caching mechanism of TYPO3.
@@ -103,10 +105,3 @@ available hooks,
 RealURL configuration options.
 Bug reporting
 Bug can be reported on Forge at http://forge.typo3.org/projects/extension-displaycontroller_advanced/issues 
-ChangeLog
-
-Version
-Changes:
-1.0.0
-First public release
-

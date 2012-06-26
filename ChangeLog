@@ -2,6 +2,7 @@
 
 	* Switched to the sprite manager for plugin icons, resolves #38356
 	* Changed icons to distinguish from displaycontroller, references #38356
+	* Cleaned up deprecated code, ensure compatibility with TYPO3 4.7, raised requirements to TYPO3 4.5, resolves #38295
 
 2012-04-19 Francois Suter (Cobweb)  <typo3@cobweb.ch>
 
