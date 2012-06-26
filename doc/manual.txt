@@ -1,0 +1,112 @@
+﻿
+EXT: Display Controller Advanced
+Extension Key: displaycontroller_advanced
+Language: en
+Keywords: forEditors, forIntermediates
+Copyright 2000-2010, Fabien Udriot, <fabien.udriot@ecodev.ch>
+
+This document is published under the Open Content License
+available from http://www.opencontent.org/opl.shtml
+
+The content of this document is related to TYPO3 
+- a GNU/GPL CMS/Framework available from www.typo3.org
+
+Table of Contents
+EXT: Display Controller Advanced	1
+Introduction	3
+What does it do?	3
+Screenshots	3
+Questions?	3
+Keeping the developer happy	4
+Users manual	5
+Setting up a display controller advanced 	5
+Multiple Data Structure	5
+Configuration	7
+Bug reporting	8
+ChangeLog	9
+
+Introduction
+What does it do?
+This extension is a FE plugin for the Tesseract Project. It connects a Data Consumer with multiple Data Providers and Data Filters in order to display data in the TYPO3 FE. Display Controller Advanced is well indicated when it is necessary to mix up different source of data coming from different Data Provider on the same Data Consumer.
+If this sounds like gibberish please go straight to the chapter "Tutorial" of extension "displaycontroller". For an even quicker introduction you can refer to the tutorial screencast found on the Tesseract web site (http://tesseract.cobweb.cb).
+Screenshots
+Here's a view of a Display Controller Advanced record. Data Providers are collapsed.
+Here's a view of a Display Controller Advanced record. Data Providers are expanded.
+Questions?
+If you have any questions about this extension, you may want to refer to the Tesseract Project web site (http://www.typo3-tesseract.com/) for support and tutorials. You may also ask questions in the TYPO3 English mailing list (typo3.english).
+Keeping the developer happy
+If you like this extension, do not hesitate to rate it. Go the Extension Repository, search for this extension, click on its title to go to the details view, then click on the “Ratings” tab and vote (you need to be logged in). Every new vote keeps the developer ticking. So just do it!
+You may also take a step back and reflect about the beauty of sharing. Think about how much you are benefiting and how much yourself is giving back to the community.
+Users manual
+Setting up a display controller advanced 
+1. Create a new record of type tt_content and change the record type to "Display Controller Advanced (not cached)" or to "Display Controller Advanced (cached)" according to the case. "Cached" means the extension will be of type USER and will thusly use the caching mechanism of TYPO3.
+
+2. In the second tab, define a Data Consumer. Either the Data Consumer already exists and can be picked within the page tree or it must be defined as a new record. Beware, the extension "templatedisplay" is not compatible with the advanced controller mainly for architecture reasons. 
+
+3. Lastly, defines groups of provider by clicking on "Create new". First Data Provider is mandatory while the filter is optional. Optionally, a second Data Provider can be defined. 
+
+Multiple Data Structure
+Display Controller Advanced will pass a multi-data structure to the Data Consumer. In other words data structure has an additional lever given by the main table name. Consider the following multi-data structure.
+pages
+name
+pages
+count
+Number of records (for pages table)
+uidList
+Comma-separated list of uid's
+records
+0
+uid
+(value)
+title
+(value)
+__subtables
+tt_content
+name
+tt_content
+count
+Number of records joined to pages table record 0
+uidList
+Comma-separated list of uid's
+records
+0
+uid
+(value)
+header
+(value)
+
+1
+...
+2
+...
+
+
+
+
+1
+...
+
+
+other table
+other data structure
+
+
+
+
+
+Configuration
+Please, refer to the manual of the "displaycontroller" extension for this section. Display Controller Advanced was build up on the basis of Controller Display. As a result, they share a lot of code in common as well as configuration options.
+In the "displaycontroller" manual, more informations are to be found about:
+TypoScript configuration options,
+passing context information to an third extension,
+available hooks,
+RealURL configuration options.
+Bug reporting
+Bug can be reported on Forge at http://forge.typo3.org/projects/extension-displaycontroller_advanced/issues 
+ChangeLog
+
+Version
+Changes:
+1.0.0
+First public release
+
