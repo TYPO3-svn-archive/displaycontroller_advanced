@@ -2,23 +2,23 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
-	'ctrl' => $TCA['tx_displaycontrolleradvanced_providergroup']['ctrl'],
+	'ctrl' => $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'hidden,title,description,sql_query,t3_mechanisms'
 	),
-	'feInterface' => $TCA['tx_displaycontrolleradvanced_providergroup']['feInterface'],
+	'feInterface' => $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['feInterface'],
 	'columns' => array(
-		'uid' => Array (
-			'config' => Array (
+		'uid' => array(
+			'config' => array(
 				'type' => 'passthrough'
 			)
 		),
-		'content' => Array (
-			'config' => Array (
+		'content' => array(
+			'config' => array(
 				'type' => 'passthrough'
 			)
 		),
-		't3ver_label' => array(		
+		't3ver_label' => array(
 			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
 			'config' => array(
 				'type' => 'input',
@@ -26,7 +26,7 @@ $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
 				'max'  => '30',
 			)
 		),
-		'hidden' => array(		
+		'hidden' => array(
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
 			'config'  => array(
@@ -34,12 +34,12 @@ $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
 				'default' => '0'
 			)
 		),
-		'title' => array(		
-			'exclude' => 0,		
-			'label' => 'LLL:EXT:dataquery/locallang_db.xml:tx_dataquery_queries.title',		
+		'title' => array(
+			'exclude' => 0,
+			'label' => 'LLL:EXT:dataquery/locallang_db.xml:tx_dataquery_queries.title',
 			'config' => array(
-				'type' => 'input',	
-				'size' => '30',	
+				'type' => 'input',
+				'size' => '30',
 				'eval' => 'required,trim',
 			)
 		),

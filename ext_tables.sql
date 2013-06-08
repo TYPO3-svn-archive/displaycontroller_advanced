@@ -4,7 +4,7 @@
 CREATE TABLE tt_content (
 	# IRRE relation
 	tx_displaycontrolleradvanced_providergroup int(11) DEFAULT '0' NOT NULL,
-	tx_displaycontroller_consumer int(11) DEFAULT '0' NOT NULL,
+	tx_displaycontroller_consumer int(11) DEFAULT '0' NOT NULL
 );
 
 #
@@ -59,6 +59,6 @@ CREATE TABLE tx_displaycontrolleradvanced_providergroup (
 	tx_displaycontroller_emptyfilter2 varchar(3) DEFAULT '' NOT NULL,
 	PRIMARY KEY (uid),
 	KEY parent (pid),
-	KEY foreign_key_content (content),
+	KEY foreign_key_content (content)
 );
 

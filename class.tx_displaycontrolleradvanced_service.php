@@ -33,10 +33,11 @@
  */
 class tx_displaycontrolleradvanced_service extends tx_tesseract_controllerbase {
 	/**
-     * This method is expected to return the primary provider related to the given display controller instance
-     * 
-     * @return	dataprovider	Reference to an object implementing the DataProvider interface
-     */
+	 * This method is expected to return the primary provider related to the given display controller instance
+	 *
+	 * @throws Exception
+	 * @return    tx_tesseract_dataprovider    Reference to an object implementing the DataProvider interface
+	 */
 	public function getRelatedProvider() {
 		t3lib_div::loadTCA('tt_content');
 			// Get table where the relation to the provider is stored
@@ -57,7 +58,7 @@ class tx_displaycontrolleradvanced_service extends tx_tesseract_controllerbase {
 }
 
 
-   
+
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller/class.tx_displaycontroller_service.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/displaycontroller/class.tx_displaycontroller_service.php']);
 }
