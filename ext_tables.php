@@ -78,7 +78,8 @@ if (TYPO3_MODE == 'BE' ||
 	(TYPO3_MODE == 'FE' && isset($GLOBALS['BE_USER']) && method_exists($GLOBALS['BE_USER'], 'isFrontendEditingActive')  && $GLOBALS['BE_USER']->isFrontendEditingActive())
 ) {
 	$icons = array(
-		'type-controller' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/displaycontroller_advanced_typeicon.png'
+		'type-controller' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/displaycontroller_advanced_typeicon.png',
+		'providergroup' => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/tx_displaycontrolleradvanced_providergroup.png',
 	);
 	t3lib_SpriteManager::addSingleIcons($icons, $_EXTKEY);
 }
@@ -109,9 +110,6 @@ t3lib_extMgm::addPlugin(
 
 	// Define main TCA for table tx_displaycontrolleradvanced_providergroup
 t3lib_extMgm::allowTableOnStandardPages('tx_displaycontrolleradvanced_providergroup');
-
-// $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup'] = array (
-//);
 
 	// ATM, defines here allowed data type + wizard
 t3lib_div::loadTCA('tx_displaycontrolleradvanced_providergroup');

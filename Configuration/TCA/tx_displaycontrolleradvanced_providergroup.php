@@ -15,7 +15,9 @@ return array(
 		'enablecolumns' => array (
 			'disabled' => 'hidden',
 		),
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/tx_displaycontrolleradvanced_providergroup.png',
+		'typeicon_classes' => array(
+			'default' => 'extensions-displaycontroller_advanced-providergroup',
+		),
 		'dividers2tabs' => 1,
 	),
 	'feInterface' => array (
