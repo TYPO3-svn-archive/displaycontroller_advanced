@@ -1,20 +1,37 @@
 <?php
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
-$TCA['tx_displaycontrolleradvanced_providergroup'] = array(
-	'ctrl' => $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['ctrl'],
+return array(
+	'ctrl' => array (
+		'title'     => 'LLL:EXT:displaycontroller_advanced/locallang_db.xml:tx_displaycontrolleradvanced_providergroup',
+		'label'     => 'title',
+		'tstamp'    => 'tstamp',
+		'crdate'    => 'crdate',
+		'cruser_id' => 'cruser_id',
+		'versioningWS' => TRUE,
+		'origUid' => 't3_origuid',
+		'default_sortby' => 'ORDER BY uid',
+		'delete' => 'deleted',
+		'enablecolumns' => array (
+			'disabled' => 'hidden',
+		),
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/tx_displaycontrolleradvanced_providergroup.png',
+		'dividers2tabs' => 1,
+	),
+	'feInterface' => array (
+		'fe_admin_fieldList' => 'hidden, title, description, sql_query, t3_mechanisms',
+	),
 	'interface' => array(
 		'showRecordFieldList' => 'hidden,title,description,sql_query,t3_mechanisms'
 	),
-	'feInterface' => $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['feInterface'],
 	'columns' => array(
-		'uid' => array(
-			'config' => array(
+		'uid' => Array (
+			'config' => Array (
 				'type' => 'passthrough'
 			)
 		),
-		'content' => array(
-			'config' => array(
+		'content' => Array (
+			'config' => Array (
 				'type' => 'passthrough'
 			)
 		),
@@ -49,7 +66,7 @@ $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
 			'config' => array (
 				'type' => 'group',
 				'internal_type' => 'db',
-				'allowed' => (isset($TCA['tt_content']['columns']['tx_displaycontroller_provider']['config']['allowed'])) ? $TCA['tt_content']['columns']['tx_displaycontroller_provider']['config']['allowed'] : '',
+				'allowed' => (isset($GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_provider']['config']['allowed'])) ? $GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_provider']['config']['allowed'] : '',
 				'size' => 1,
 				'minitems' => 1,
 				'maxitems' => 1,
@@ -92,7 +109,7 @@ $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
 			'config' => array (
 				'type' => 'group',
 				'internal_type' => 'db',
-				'allowed' => (isset($TCA['tt_content']['columns']['tx_displaycontroller_datafilter']['config']['allowed'])) ? $TCA['tt_content']['columns']['tx_displaycontroller_datafilter']['config']['allowed'] : '',
+				'allowed' => (isset($GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_datafilter']['config']['allowed'])) ? $GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_datafilter']['config']['allowed'] : '',
 				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
@@ -133,7 +150,7 @@ $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
 			'config' => array (
 				'type' => 'group',
 				'internal_type' => 'db',
-				'allowed' => (isset($TCA['tt_content']['columns']['tx_displaycontroller_provider2']['config']['allowed'])) ? $TCA['tt_content']['columns']['tx_displaycontroller_provider2']['config']['allowed'] : '',
+				'allowed' => (isset($GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_provider2']['config']['allowed'])) ? $GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_provider2']['config']['allowed'] : '',
 				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,
@@ -174,7 +191,7 @@ $TCA['tx_displaycontrolleradvanced_providergroup'] = array(
 			'config' => array (
 				'type' => 'group',
 				'internal_type' => 'db',
-				'allowed' => (isset($TCA['tt_content']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'])) ? $TCA['tt_content']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'] : '',
+				'allowed' => (isset($GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'])) ? $GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'] : '',
 				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,

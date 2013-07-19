@@ -23,7 +23,7 @@ $tempColumns = array(
 		'config' => array(
 			'type' => 'group',
 			'internal_type' => 'db',
-			'allowed' => (isset($GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_consumer']['config']['allowed'])) ? $GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_consumer']['config']['allowed'] : '',
+			'allowed' => (isset( $GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_consumer']['config']['allowed'])) ?  $GLOBALS['TCA']['tt_content']['columns']['tx_displaycontroller_consumer']['config']['allowed'] : '',
 			'size' => 1,
 			'minitems' => 1,
 			'maxitems' => 1,
@@ -65,13 +65,13 @@ $showItem = 'CType;;4;button,hidden,1-1-1, header;;3;;2-2-2,linkToTop;;;;3-3-3';
 $showItem .= ', --div--;LLL:EXT:displaycontroller/locallang_db.xml:tabs.dataobjects, tx_displaycontroller_consumer;;;;1-1-1, tx_displaycontrolleradvanced_providergroup;;;;2-2-2';
 $showItem .= ', --div--;LLL:EXT:cms/locallang_tca.xml:pages.tabs.access, starttime, endtime';
 
-$GLOBALS['TCA']['tt_content']['types'][$_EXTKEY . '_pi1']['showitem'] = $showItem;
-$GLOBALS['TCA']['tt_content']['types'][$_EXTKEY . '_pi2']['showitem'] = $showItem;
+ $GLOBALS['TCA']['tt_content']['types'][$_EXTKEY . '_pi1']['showitem'] = $showItem;
+ $GLOBALS['TCA']['tt_content']['types'][$_EXTKEY . '_pi2']['showitem'] = $showItem;
 
 	// Register icons for content type
 	// Define classes and register icon files with Sprite Manager
-$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$_EXTKEY . '_pi1'] =  'extensions-displaycontroller_advanced-type-controller';
-$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$_EXTKEY . '_pi2'] =  'extensions-displaycontroller_advanced-type-controller';
+ $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$_EXTKEY . '_pi1'] =  'extensions-displaycontroller_advanced-type-controller';
+ $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$_EXTKEY . '_pi2'] =  'extensions-displaycontroller_advanced-type-controller';
 
 	// Register icon in the BE and for FE editing (code taken from TemplaVoilà)
 if (TYPO3_MODE == 'BE' ||
@@ -110,37 +110,17 @@ t3lib_extMgm::addPlugin(
 	// Define main TCA for table tx_displaycontrolleradvanced_providergroup
 t3lib_extMgm::allowTableOnStandardPages('tx_displaycontrolleradvanced_providergroup');
 
-$GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup'] = array (
-	'ctrl' => array (
-		'title'     => 'LLL:EXT:displaycontroller_advanced/locallang_db.xml:tx_displaycontrolleradvanced_providergroup',
-		'label'     => 'title',
-		'tstamp'    => 'tstamp',
-		'crdate'    => 'crdate',
-		'cruser_id' => 'cruser_id',
-		'versioningWS' => TRUE,
-		'origUid' => 't3_origuid',
-		'default_sortby' => 'ORDER BY uid',
-		'delete' => 'deleted',
-		'enablecolumns' => array (
-			'disabled' => 'hidden',
-		),
-		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY) . 'Configuration/TCA/tx_displaycontrolleradvanced_providergroup.php',
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY) . 'Resources/Public/Images/tx_displaycontrolleradvanced_providergroup.png',
-		'dividers2tabs' => 1,
-	),
-	'feInterface' => array (
-		'fe_admin_fieldList' => 'hidden, title, description, sql_query, t3_mechanisms',
-	)
-);
+// $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup'] = array (
+//);
 
 	// ATM, defines here allowed data type + wizard
 t3lib_div::loadTCA('tx_displaycontrolleradvanced_providergroup');
-$GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_provider']['config']['allowed'] .= ',tx_dataquery_queries';
-$GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter']['config']['allowed'] .= ',tx_datafilter_filters';
-$GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'] .= ',tx_datafilter_filters';
+ $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_provider']['config']['allowed'] .= ',tx_dataquery_queries';
+ $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter']['config']['allowed'] .= ',tx_datafilter_filters';
+ $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter2']['config']['allowed'] .= ',tx_datafilter_filters';
 
 if (t3lib_extMgm::isLoaded('tagpackprovider')) {
-	$GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_provider2']['config']['allowed'] .= ',tx_tagpackprovider_selections';
+	 $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_provider2']['config']['allowed'] .= ',tx_tagpackprovider_selections';
 }
 
 	// Add a wizard for adding a dataquery
@@ -155,7 +135,7 @@ $addDataqueryWizard = array(
 								'setValue' => 'append'
 							)
 						);
-$GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_provider']['config']['wizards']['add_dataquery'] = $addDataqueryWizard;
+ $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_provider']['config']['wizards']['add_dataquery'] = $addDataqueryWizard;
 
 
 $addDatafilteryWizard = array(
@@ -169,12 +149,12 @@ $addDatafilteryWizard = array(
 								'setValue' => 'append'
 							)
 						);
-$GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter']['config']['wizards']['add_datafilter'] = $addDatafilteryWizard;
-$GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter2']['config']['wizards']['add_datafilter2'] = $addDatafilteryWizard;
+ $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter']['config']['wizards']['add_datafilter'] = $addDatafilteryWizard;
+ $GLOBALS['TCA']['tx_displaycontrolleradvanced_providergroup']['columns']['tx_displaycontroller_datafilter2']['config']['wizards']['add_datafilter2'] = $addDatafilteryWizard;
 
 	// Register wizards for plug-ins
 if (TYPO3_MODE == 'BE') {
-	$GLOBALS['TBE_MODULES_EXT']['xMOD_db_new_content_el']['addElClasses']['tx_displaycontrolleradvanced_pi1_wizicon'] = t3lib_extMgm::extPath($_EXTKEY) . 'pi1/class.tx_displaycontrolleradvanced_pi1_wizicon.php';
-	$GLOBALS['TBE_MODULES_EXT']['xMOD_db_new_content_el']['addElClasses']['tx_displaycontrolleradvanced_pi2_wizicon'] = t3lib_extMgm::extPath($_EXTKEY) . 'pi2/class.tx_displaycontrolleradvanced_pi2_wizicon.php';
+	$TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['tx_displaycontrolleradvanced_pi1_wizicon'] = t3lib_extMgm::extPath($_EXTKEY) . 'pi1/class.tx_displaycontrolleradvanced_pi1_wizicon.php';
+	$TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['tx_displaycontrolleradvanced_pi2_wizicon'] = t3lib_extMgm::extPath($_EXTKEY) . 'pi2/class.tx_displaycontrolleradvanced_pi2_wizicon.php';
 }
 ?>
